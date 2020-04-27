@@ -20,9 +20,6 @@ public class MenuActivity extends AppCompatActivity {
     private Gyroscope gyroscope;
     private Intent intent;
 
-    TextView rotationX;
-    TextView rotationY;
-    TextView rotationZ;
 
 
     @Override
@@ -35,10 +32,6 @@ public class MenuActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
-
-        rotationX = findViewById(R.id.rotationX);
-        rotationY = findViewById(R.id.rotationY);
-        rotationZ = findViewById(R.id.rotationZ);
 
         final Intent intent;
 
@@ -107,13 +100,7 @@ public class MenuActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    @SuppressLint("SetTextI18n")
-    void showInfo(float x, float y, float z){
-        rotationX.setText(Float.toString(x));
-        rotationY.setText(Float.toString(y));
-        rotationZ.setText(Float.toString(z));
 
-    }
 
     @Override
     protected void onPause() {
