@@ -6,34 +6,33 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
-public class Accelerometer {
+public class Proximity {
 
     public interface Listener
     {
-        void onAccelerationChanged(float ax, float ay, float az);
+        void onProximityChanged(float d);
     }
 
     private Listener listener;
+    private SensorManager manager;
+    private Sensor sensor;
+    private SensorEventListener sensorEventListener;
 
     public void setListener(Listener l)
     {
         listener = l;
     }
 
-    private SensorManager manager;
-    private Sensor sensor;
-    private SensorEventListener sensorEventListener;
-
-    Accelerometer(Context context)
+    Proximity(Context context)
     {
         manager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
-        sensor = manager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        sensor = manager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
         sensorEventListener = new SensorEventListener() {
             @Override
             public void onSensorChanged(SensorEvent sensorEvent) {
                 if(listener!=null)
                 {
-                    listener.onAccelerationChanged(sensorEvent.values[0], sensorEvent.values[1], sensorEvent.values[2]);
+                    listener.onProximityChanged(sensorEvent.values[0]);
                 }
             }
 
@@ -46,10 +45,10 @@ public class Accelerometer {
 
     public void register()
     {
-        manager.registerListener(sensorEventListener,sensor,SensorManager.SENSOR_DELAY_FASTEST);
+        manager.registerListener(sensorEventListener, sensor,SensorManager.SENSOR_DELAY_NORMAL);
     }
 
-    public void unRegister()
+    public void unregister()
     {
         manager.unregisterListener(sensorEventListener);
     }

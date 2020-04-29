@@ -9,4 +9,8 @@
     <string name="start">Start</string>
     <string name="stop">Stop</string>
     <string name="reset">Resetuj</string>
+    <string name="proximity">Odległość</string>
+    <string name="magnetic_detector">Magnes detektor</string>
+    <string name="magnetic_detected">Magnes wykryto w pobliżu</string>
+    <string name="magnetic_not_detected">Magnes NIE wykryto w pobliżu</string>
 </resources>

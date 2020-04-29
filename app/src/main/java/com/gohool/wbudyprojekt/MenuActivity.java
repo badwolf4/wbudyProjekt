@@ -81,12 +81,12 @@ public class MenuActivity extends AppCompatActivity {
         switch (w){
             case 1:
             {
-                intent = new Intent(getBaseContext(),KompasActivity.class);
+                intent = new Intent(getBaseContext(),MagneticDetectorActivity.class);
                 break;
             }
             case 2:
             {
-                intent = new Intent(getBaseContext(),DystansActivity.class);
+                intent = new Intent(getBaseContext(),ProximityActivity.class);
                 break;
             }
             case 3:
