@@ -13,4 +13,8 @@
     <string name="magnetic_detector">Magnes detektor</string>
     <string name="magnetic_detected">Magnes wykryto w pobliżu</string>
     <string name="magnetic_not_detected">Magnes NIE wykryto w pobliżu</string>
+    <string name="shaker">Shaker</string>
+    <string name="shake_me">Wstrząsnij mnie!</string>
+    <string name="wlacz_latarke">Zbliż telefon do policzka by wlaczyc latarke</string>
+    <string name="wylacz_latarke">Zbliż telefon do policzka by wylaczyc latarke</string>
 </resources>

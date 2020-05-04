@@ -91,7 +91,7 @@ public class MenuActivity extends AppCompatActivity {
             }
             case 3:
             {
-                intent = new Intent(getBaseContext(),KrokomierzActivity.class);
+                intent = new Intent(getBaseContext(),SoundByShakeActivity.class);
                 break;
             }
 
