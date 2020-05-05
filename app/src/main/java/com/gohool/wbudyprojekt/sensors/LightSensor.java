@@ -1,21 +1,19 @@
-package com.gohool.wbudyprojekt;
+package com.gohool.wbudyprojekt.sensors;
 
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.net.sip.SipSession;
 
-public class Gyroscope {
+public class LightSensor {
 
     public interface Listener
     {
-        void onRotation(float rx, float ry, float rz);
+        void onLightChanged(float light);
     }
 
     private Listener listener;
-
     public void setListener(Listener l)
     {
         listener = l;
@@ -23,18 +21,20 @@ public class Gyroscope {
 
     private SensorManager manager;
     private Sensor sensor;
-    private SensorEventListener sensorEventListenerlistener;
+    private SensorEventListener sensorEventListener;
 
-    Gyroscope(Context context)
+    public LightSensor(Context context)
     {
         manager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
-        sensor = manager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
-        sensorEventListenerlistener = new SensorEventListener() {
+        assert manager != null;
+        sensor = manager.getDefaultSensor(Sensor.TYPE_LIGHT);
+        sensorEventListener = new SensorEventListener() {
             @Override
             public void onSensorChanged(SensorEvent sensorEvent) {
                 if(listener!=null)
                 {
-                    listener.onRotation(sensorEvent.values[0],sensorEvent.values[1],sensorEvent.values[2]);
+                    //pobiera wartosc mocy swiatla
+                    listener.onLightChanged(sensorEvent.values[0]);
                 }
             }
 
@@ -47,11 +47,11 @@ public class Gyroscope {
 
     public void register()
     {
-        manager.registerListener(sensorEventListenerlistener, sensor, SensorManager.SENSOR_DELAY_NORMAL);
+        manager.registerListener(sensorEventListener, sensor, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     public void unregister()
     {
-        manager.unregisterListener(sensorEventListenerlistener);
+        manager.unregisterListener(sensorEventListener);
     }
 }

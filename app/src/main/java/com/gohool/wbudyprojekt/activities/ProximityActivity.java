@@ -1,29 +1,31 @@
-package com.gohool.wbudyprojekt;
+package com.gohool.wbudyprojekt.activities;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.pm.PackageManager;
-import android.graphics.Camera;
+import android.graphics.Color;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import com.gohool.wbudyprojekt.sensors.LightSensor;
+import com.gohool.wbudyprojekt.sensors.Proximity;
+import com.gohool.wbudyprojekt.R;
+
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class ProximityActivity extends AppCompatActivity {
 
-    Proximity proximity;
+    private Proximity proximity;
+    private LightSensor lightSensor;
 
-    TextView proximityView;
-    private static final  int CAMERA_REQUEST = 50;
+    private TextView proximityView;
+
     private boolean flashLightState;
 
-    CameraManager cameraManager;
+    private CameraManager cameraManager;
 
 
 
@@ -36,29 +38,29 @@ public class ProximityActivity extends AppCompatActivity {
         proximityView = findViewById(R.id.proximityTextView);
         proximity = new Proximity(getBaseContext());
         proximityView.setText(R.string.wlacz_latarke);
-        //showInfo(R.string.wylacz_latarke);
+        proximityView.setTextColor(Color.RED);
 
-//        final boolean hasCameraFlash = getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
-//        boolean isEnabled = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED;
-//
         flashLightState = false;
         proximity.setListener(new Proximity.Listener() {
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onProximityChanged(float d) {
-
-
+        //interpretacja wynikow odczytanych z proximity
                 if(d==0){
                     cameraManager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
                     if(!flashLightState)
                     {
+                        //wlaczanie latarki
                         try {
+                            assert cameraManager != null;
                             String cameraId = cameraManager.getCameraIdList()[0];
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                //dokladnie tu wlaczamy
                                 cameraManager.setTorchMode(cameraId,true);
+
                                 flashLightState = true;
                                 proximityView.setText(R.string.wylacz_latarke);
-                                //showInfo(R.string.wylacz_latarke);
+                                proximityView.setTextColor(Color.GREEN);
                             }
                         } catch (CameraAccessException e) {
                             e.printStackTrace();
@@ -66,13 +68,17 @@ public class ProximityActivity extends AppCompatActivity {
                     }
                     else
                     {
+                        //wylaczenie latarki
                         try {
+                            assert cameraManager != null;
                             String cameraId = cameraManager.getCameraIdList()[0];
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                //dokladnie tu wylaczamy
                                 cameraManager.setTorchMode(cameraId,false);
+
                                 flashLightState = false;
                                 proximityView.setText(R.string.wlacz_latarke);
-                                //showInfo(R.string.wylacz_latarke);
+                                proximityView.setTextColor(Color.RED);
                             }
                         } catch (CameraAccessException e) {
                             e.printStackTrace();
@@ -83,33 +89,51 @@ public class ProximityActivity extends AppCompatActivity {
 
             }
         });
+
+        lightSensor = new LightSensor(getBaseContext());
+        //interpretacja wynikow odczytane z light sensor
+        lightSensor.setListener(new LightSensor.Listener() {
+            @Override
+            public void onLightChanged(float light) {
+                if(light>500)
+                    lightTheme();
+                else
+                    darkTheme();
+            }
+        });
     }
 
-//    void showInfo(int t)
-//    {
-//        proximityView.setText(t);
-//    }
+    void lightTheme()
+    {
+        getWindow().getDecorView().setBackgroundColor(Color.WHITE);
+    }
+
+    void darkTheme()
+    {
+        getWindow().getDecorView().setBackgroundColor(Color.BLACK);
+    }
 
     @Override
     protected void onResume() {
         super.onResume();
         proximity.register();
+        lightSensor.register();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         proximity.unregister();
+        //dodatkowo wylaczamy latarke przy wyjsciu z aplikacji, czy tez tego activity
         try {
             String cameraId = cameraManager.getCameraIdList()[0];
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 cameraManager.setTorchMode(cameraId,false);
                 flashLightState = true;
-                //showInfo(R.string.wylacz_latarke);
-
             }
         } catch (CameraAccessException e) {
             e.printStackTrace();
         }
+        lightSensor.unregister();
     }
 }

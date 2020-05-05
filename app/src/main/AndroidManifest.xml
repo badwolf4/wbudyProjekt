@@ -10,14 +10,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SoundByShakeActivity"></activity>
-        <activity android:name=".MagneticDetectorActivity" />
-        <activity android:name=".ProximityActivity" />
-        <activity android:name=".DystansActivity" />
-        <activity android:name=".KompasActivity" />
-        <activity android:name=".KrokomierzActivity" />
-        <activity android:name=".MenuActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".activities.SoundByShakeActivity"></activity>
+        <activity android:name=".activities.MagneticDetectorActivity" />
+        <activity android:name=".activities.ProximityActivity" />
+        <activity android:name=".activities.MenuActivity" />
+        <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

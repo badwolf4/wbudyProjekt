@@ -17,4 +17,5 @@
     <string name="shake_me">Wstrząsnij mnie!</string>
     <string name="wlacz_latarke">Zbliż telefon do policzka by wlaczyc latarke</string>
     <string name="wylacz_latarke">Zbliż telefon do policzka by wylaczyc latarke</string>
+    <string name="latarka">Latarka</string>
 </resources>

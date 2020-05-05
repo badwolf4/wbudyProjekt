@@ -1,4 +1,4 @@
-package com.gohool.wbudyprojekt;
+package com.gohool.wbudyprojekt.sensors;
 
 import android.content.Context;
 import android.hardware.Sensor;
@@ -6,33 +6,35 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
-public class LightSensor {
+public class Proximity {
 
     public interface Listener
     {
-        void onLightChanged(float light);
+        void onProximityChanged(float d);
     }
 
     private Listener listener;
+    private SensorManager manager;
+    private Sensor sensor;
+    private SensorEventListener sensorEventListener;
+
     public void setListener(Listener l)
     {
         listener = l;
     }
 
-    private SensorManager manager;
-    private Sensor sensor;
-    private SensorEventListener sensorEventListener;
-
-    LightSensor(Context context)
+    public Proximity(Context context)
     {
         manager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
-        sensor = manager.getDefaultSensor(Sensor.TYPE_LIGHT);
+        assert manager != null;
+        sensor = manager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
         sensorEventListener = new SensorEventListener() {
             @Override
             public void onSensorChanged(SensorEvent sensorEvent) {
                 if(listener!=null)
                 {
-                    listener.onLightChanged(sensorEvent.values[0]);
+                    //zwraca wartosc 0 jesli obiekt wykryto, 5 jesli nie wykryto
+                    listener.onProximityChanged(sensorEvent.values[0]);
                 }
             }
 
@@ -45,7 +47,7 @@ public class LightSensor {
 
     public void register()
     {
-        manager.registerListener(sensorEventListener, sensor, SensorManager.SENSOR_DELAY_NORMAL);
+        manager.registerListener(sensorEventListener, sensor,SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     public void unregister()

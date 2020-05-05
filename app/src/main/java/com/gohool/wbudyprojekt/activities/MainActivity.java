@@ -1,20 +1,20 @@
-package com.gohool.wbudyprojekt;
+package com.gohool.wbudyprojekt.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Service;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
-import android.hardware.Sensor;
-import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
+
+import com.gohool.wbudyprojekt.sensors.LightSensor;
+import com.gohool.wbudyprojekt.R;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button button;
+    private Button button;
 
     private LightSensor lightSensor;
 
@@ -23,27 +23,32 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        button = (Button) findViewById(R.id.start_button);
+        button = findViewById(R.id.start_button);
+        //obsluga przycisku na ekranie
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getBaseContext(),MenuActivity.class);
+                Intent intent = new Intent(getBaseContext(), MenuActivity.class);
                 startActivity(intent);
             }
         });
 
         lightSensor = new LightSensor(getBaseContext());
         lightSensor.setListener(new LightSensor.Listener() {
+            @SuppressLint("ResourceAsColor")
             @Override
             public void onLightChanged(float light) {
 
                 if(light > 500)
                 {
+                    //ustawianie koloru tla aplikacji i tla przycisku
                     getWindow().getDecorView().setBackgroundColor(Color.WHITE);
+                    button.setBackgroundColor(Color.WHITE);
                 }
                 else
                 {
-                    getWindow().getDecorView().setBackgroundColor(Color.DKGRAY);
+                    getWindow().getDecorView().setBackgroundColor(Color.BLACK);
+                    button.setBackgroundColor(Color.rgb(98,0,238));
                 }
             }
         });

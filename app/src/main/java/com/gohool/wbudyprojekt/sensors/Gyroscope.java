@@ -1,4 +1,4 @@
-package com.gohool.wbudyprojekt;
+package com.gohool.wbudyprojekt.sensors;
 
 import android.content.Context;
 import android.hardware.Sensor;
@@ -6,33 +6,36 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
-public class Proximity {
+public class Gyroscope {
 
     public interface Listener
     {
-        void onProximityChanged(float d);
+        void onRotation(float rx, float ry, float rz);
     }
 
     private Listener listener;
-    private SensorManager manager;
-    private Sensor sensor;
-    private SensorEventListener sensorEventListener;
 
     public void setListener(Listener l)
     {
         listener = l;
     }
 
-    Proximity(Context context)
+    private SensorManager manager;
+    private Sensor sensor;
+    private SensorEventListener sensorEventListenerlistener;
+
+    public Gyroscope(Context context)
     {
         manager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
-        sensor = manager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
-        sensorEventListener = new SensorEventListener() {
+        assert manager != null;
+        sensor = manager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+        sensorEventListenerlistener = new SensorEventListener() {
             @Override
             public void onSensorChanged(SensorEvent sensorEvent) {
                 if(listener!=null)
                 {
-                    listener.onProximityChanged(sensorEvent.values[0]);
+                    //pobiera 3 wartosci kat obrocenia po osi x, y, z
+                    listener.onRotation(sensorEvent.values[0],sensorEvent.values[1],sensorEvent.values[2]);
                 }
             }
 
@@ -45,11 +48,11 @@ public class Proximity {
 
     public void register()
     {
-        manager.registerListener(sensorEventListener, sensor,SensorManager.SENSOR_DELAY_NORMAL);
+        manager.registerListener(sensorEventListenerlistener, sensor, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     public void unregister()
     {
-        manager.unregisterListener(sensorEventListener);
+        manager.unregisterListener(sensorEventListenerlistener);
     }
 }
